@@ -2,6 +2,10 @@
 
 class StructureDiffInfo
 {
+    const KEY    = 'Отсутствует ключ';
+    const TYPE   = 'Разность типов';
+    const CONFIG = 'Разность структуры';
+
     private $message;
 
     private $path = [];
@@ -54,7 +58,7 @@ class AssertArrayStructure
             $needTypes = explode('|', $structure);
 
             if (!$this->checkTypes($data, $needTypes)) {
-                return $this->createDiff('type', 'Разность типов');
+                return $this->createDiff('var:type', StructureDiffInfo::TYPE);
             }
 
         } elseif (is_array($structure)) {
@@ -68,7 +72,7 @@ class AssertArrayStructure
             }
 
             if (!$this->checkTypes($data, $needTypes)) {
-                return $this->createDiff('type', 'Разность типов');
+                return $this->createDiff('type', StructureDiffInfo::TYPE);
             }
 
             if (is_array($data)) {
@@ -97,13 +101,13 @@ class AssertArrayStructure
                         }, $data);
 
                         if (array_diff($arrayTypes, $needTypes)) {
-                            return $this->createDiff('array:values', 'Разность структуры');
+                            return $this->createDiff('array:values', StructureDiffInfo::TYPE);
                         }
                     }
 
                 } else {
 
-                    return $this->createDiff('array:type', 'Разность структуры');
+                    return $this->createDiff('array:type', StructureDiffInfo::CONFIG);
                 }
             }
 
@@ -115,7 +119,7 @@ class AssertArrayStructure
         foreach ($assoc as $key => $structure) {
 
             if (!array_key_exists($key, $data)) {
-                return $this->createDiff($key, 'Отсутствует ключ');
+                return $this->createDiff($key, StructureDiffInfo::KEY);
             };
 
             if ($diff = $this->compare($data[$key], $structure)) {

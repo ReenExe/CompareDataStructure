@@ -157,6 +157,31 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @dataProvider arrayStructureDiffProvider
+     */
+    public function testArrayStructureDiff($data, $structure, $message, $path)
+    {
+        $diff = AssertArrayStructure::check($data, $structure);
+
+        $this->assertTrue(
+            ($diff instanceof StructureDiffInfo)
+            && $diff->getMessage() === $message
+            && $diff->getPath() === $path
+        );
+    }
+
+    public function arrayStructureDiffProvider()
+    {
+        return [
+
+            [
+                true, 'integer', StructureDiffInfo::TYPE, 'var:type'
+            ]
+
+        ];
+    }
+
     private function assertArrayStructureSuccess($data, $structure)
     {
         $this->assertTrue(AssertArrayStructure::check($data, $structure));
