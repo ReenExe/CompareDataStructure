@@ -1,5 +1,32 @@
 <?php
 
+class StructureDiffInfo
+{
+    private $message;
+
+    private $path = [];
+
+    public function __construct($message)
+    {
+        $this->message = $message;
+    }
+
+    public function addPath($key)
+    {
+        array_unshift($this->path, $key);
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    public function getPath()
+    {
+        return join('.', $this->path);
+    }
+}
+
 class AssertArrayStructure
 {
     public static function check($data, $structure)
@@ -8,7 +35,7 @@ class AssertArrayStructure
 
         if (empty($self)) $self = new self;
 
-        return $self->compare($data, $structure);
+        return $self->compare($data, $structure) ?: true;
     }
 
     private function checkTypes($value, array $types)
@@ -26,10 +53,11 @@ class AssertArrayStructure
         if (is_string($structure)) {
             $needTypes = explode('|', $structure);
 
-            return $this->checkTypes($data, $needTypes) ?: $this->structureError('type', 'Разность типов');
-        }
+            if (!$this->checkTypes($data, $needTypes)) {
+                return $this->createDiff('type', 'Разность типов');
+            }
 
-        if (is_array($structure)) {
+        } elseif (is_array($structure)) {
             $needTypes = ['array'];
 
             if (isset($structure['type'])) {
@@ -40,15 +68,15 @@ class AssertArrayStructure
             }
 
             if (!$this->checkTypes($data, $needTypes)) {
-                return $this->structureError('type', 'Разность типов');
+                return $this->createDiff('type', 'Разность типов');
             }
 
             if (is_array($data)) {
 
                 if (isset($structure['assoc'])) {
 
-                    if ($error = $this->assoc($structure['assoc'], $data)) {
-                        return $error;
+                    if ($diff = $this->assoc($structure['assoc'], $data)) {
+                        return $diff;
                     }
 
                 } elseif(isset($structure['values'])) {
@@ -56,8 +84,8 @@ class AssertArrayStructure
                     if (is_array($structure['values'])) {
                         foreach ($data as $subData) {
 
-                            if ($error = $this->assoc($structure['values'], $subData)) {
-                                return $error;
+                            if ($diff = $this->assoc($structure['values'], $subData)) {
+                                return $diff;
                             }
 
                         }
@@ -69,20 +97,17 @@ class AssertArrayStructure
                         }, $data);
 
                         if (array_diff($arrayTypes, $needTypes)) {
-                            return $this->structureError('array:values', 'Разность структуры');
+                            return $this->createDiff('array:values', 'Разность структуры');
                         }
                     }
 
-
                 } else {
 
-                    return $this->structureError('array:type', 'Разность структуры');
+                    return $this->createDiff('array:type', 'Разность структуры');
                 }
             }
 
         }
-
-        return true;
     }
 
     private function assoc(array $assoc, array $data)
@@ -90,29 +115,24 @@ class AssertArrayStructure
         foreach ($assoc as $key => $structure) {
 
             if (!array_key_exists($key, $data)) {
-
-                return $this->structureError($key, 'Отсутствует ключ');
-
+                return $this->createDiff($key, 'Отсутствует ключ');
             };
 
-            if (is_array($error = $this->compare($data[$key], $structure))) {
-
-                return $this->structureError($key, 'Разность структуры', $error);
+            if ($diff = $this->compare($data[$key], $structure)) {
+                return $this->processDiff($diff, $key);
             }
         }
     }
 
-    private function structureError($key, $message, array $error = [])
+    private function createDiff($key, $message, StructureDiffInfo $error = null)
     {
-        if (empty($error)) {
-            $error = [
-                'path'    => [],
-                'message' => $message
-            ];
-        }
+        return $this->processDiff(new StructureDiffInfo($message), $key);
+    }
 
-        array_unshift($error['path'], $key);
+    private function processDiff(StructureDiffInfo $diff, $key)
+    {
+        $diff->addPath($key);
 
-        return $error;
+        return $diff;
     }
 }

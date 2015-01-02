@@ -167,10 +167,10 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
         /**
          * Ошибка возвращаются в формате массива
          */
-        $error = AssertArrayStructure::check($data, $structure);
+        $diff = AssertArrayStructure::check($data, $structure);
 
         $this->assertTrue(
-            is_array($error) && isset($error['path']) && isset($error['message'])
+            $diff instanceof StructureDiffInfo
         );
     }
 }
