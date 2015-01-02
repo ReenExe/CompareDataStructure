@@ -175,12 +175,14 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
     {
         return [
 
+            /* ~ */
             [
                 true, 'integer', StructureDiffInfo::TYPE, 'var:type'
             ],
 
+            /* ~ */
             [
-                [],
+                [], // diff
                 [
                     'assoc' => [
                         'id'    => 'integer'
@@ -190,9 +192,10 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                 'id'
             ],
 
+            /* ~ */
             [
                 [
-                    'id'    => true
+                    'id'    => true // diff
                 ],
                 [
                     'assoc' => [
@@ -203,6 +206,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                 'id.var:type'
             ],
 
+            /* ~ */
             [
                 [
                     'id'    => 1,
@@ -217,7 +221,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                             'children' => null
                         ],
 
-                        []
+                        [] // diff
                     ]
                 ],
                 [
@@ -233,6 +237,35 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                 ],
                 StructureDiffInfo::KEY,
                 'children.id'
+            ],
+
+            /* ~ */
+            [
+                [
+                    'id'    => 1,
+                    'name'  => 'Jerry',
+
+                    'bestFriend' => [
+                        'id'    => '7', // diff
+                        'name'  => 'Tom',
+                    ]
+                ],
+
+                [
+                    'assoc' => [
+                        'id'    => 'integer',
+                        'name'  => 'string',
+
+                        'bestFriend' => [
+                            'assoc' => [
+                                'id'    => 'integer',
+                                'name'  => 'string',
+                            ]
+                        ]
+                    ]
+                ],
+                StructureDiffInfo::TYPE,
+                'bestFriend.id.var:type'
             ],
 
         ];
