@@ -24,22 +24,22 @@ class AssertArrayStructure
     private function execute($data, $structure)
     {
         if (is_string($structure)) {
-            $types = explode('|', $structure);
+            $needTypes = explode('|', $structure);
 
-            return $this->checkTypes($data, $types) ?: $this->structureError('type', 'Разность типов');
+            return $this->checkTypes($data, $needTypes) ?: $this->structureError('type', 'Разность типов');
         }
 
         if (is_array($structure)) {
-            $types = ['array'];
+            $needTypes = ['array'];
 
             if (isset($structure['type'])) {
-                $types = array_merge(
-                    $types,
+                $needTypes = array_merge(
+                    $needTypes,
                     explode('|', $structure['type'])
                 );
             }
 
-            if (!$this->checkTypes($data, $types)) {
+            if (!$this->checkTypes($data, $needTypes)) {
                 return $this->structureError('type', 'Разность типов');
             }
 
@@ -63,21 +63,34 @@ class AssertArrayStructure
 
                 } elseif(isset($structure['values'])) {
 
-                    foreach ($data as $subData) {
-                        foreach ($structure['values'] as $key => $subStructure) {
+                    if (is_array($structure['values'])) {
+                        foreach ($data as $subData) {
+                            foreach ($structure['values'] as $key => $subStructure) {
 
-                            if (!array_key_exists($key, $subData)) {
+                                if (!array_key_exists($key, $subData)) {
 
-                                return $this->structureError($key, 'Отсутствует ключ');
+                                    return $this->structureError($key, 'Отсутствует ключ');
 
-                            };
+                                };
 
-                            if (is_array($error = $this->execute($subData[$key], $subStructure))) {
+                                if (is_array($error = $this->execute($subData[$key], $subStructure))) {
 
-                                return $this->structureError($key, 'Разность структуры', $error);
+                                    return $this->structureError($key, 'Разность структуры', $error);
+                                }
                             }
                         }
+                    } elseif (is_string($structure['values'])) {
+                        $needTypes = explode('|', $structure['values']);
+
+                        $arrayTypes = array_map(function($entry) {
+                            return strtolower(gettype($entry));
+                        }, $data);
+
+                        if (array_diff($arrayTypes, $needTypes)) {
+                            return $this->structureError('array:values', 'Разность структуры');
+                        }
                     }
+
 
                 } else {
 
@@ -92,14 +105,11 @@ class AssertArrayStructure
 
     private function structureError($key, $message, array $error = [])
     {
-        static $defaultError = [
-            'path' => []
-        ];
-
         if (empty($error)) {
-            $error = $defaultError;
-
-            $error['message'] = $message;
+            $error = [
+                'path'    => [],
+                'message' => $message
+            ];
         }
 
         array_unshift($error['path'], $key);

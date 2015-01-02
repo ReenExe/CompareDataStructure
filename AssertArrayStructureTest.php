@@ -9,7 +9,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
      */
     public function testSimpleTypeSuccess($data, $structure)
     {
-        $this->assertTrue(AssertArrayStructure::check($data, $structure));
+        $this->assertArrayStructureSuccess($data, $structure);
     }
 
     public function simpleTypeProvider()
@@ -44,9 +44,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
      */
     public function testSimpleTypeFail($data, $structure)
     {
-        $this->assertTrue(
-            is_array(AssertArrayStructure::check($data, $structure))
-        );
+        $this->assertArrayStructureFail($data, $structure);
     }
 
     public function simpleTypeFailProvider()
@@ -63,13 +61,32 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
      */
     public function testArrayStructureSuccess($data, $structure)
     {
-        $this->assertTrue(AssertArrayStructure::check($data, $structure));
+        $this->assertArrayStructureSuccess($data, $structure);
     }
 
     public function arrayStructureSuccessProvider()
     {
         return [
 
+            /* ~ */
+            [
+                [1, 2, 3],
+
+                ['values' => 'integer']
+            ],
+
+            /* ~ */
+            [
+                array_merge(
+                    range(1, 100),
+                    range('a', 'z'),
+                    [true, false]
+                ),
+
+                ['values' => 'integer|string|boolean']
+            ],
+
+            /* ~ */
             [
                 [],
 
@@ -81,6 +98,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                 ]
             ],
 
+            /* ~ */
             [
                 [
                     [
@@ -102,7 +120,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                 ]
             ],
 
-
+            /* ~ */
             [
                 [
                     'id'    => 1,
@@ -137,5 +155,22 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
 
 
         ];
+    }
+
+    private function assertArrayStructureSuccess($data, $structure)
+    {
+        $this->assertTrue(AssertArrayStructure::check($data, $structure));
+    }
+
+    private function assertArrayStructureFail($data, $structure)
+    {
+        /**
+         * Ошибка возвращаются в формате массива
+         */
+        $error = AssertArrayStructure::check($data, $structure);
+
+        $this->assertTrue(
+            is_array($error) && isset($error['path']) && isset($error['message'])
+        );
     }
 }
