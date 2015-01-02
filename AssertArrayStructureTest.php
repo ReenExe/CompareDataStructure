@@ -177,7 +177,63 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
 
             [
                 true, 'integer', StructureDiffInfo::TYPE, 'var:type'
-            ]
+            ],
+
+            [
+                [],
+                [
+                    'assoc' => [
+                        'id'    => 'integer'
+                    ]
+                ],
+                StructureDiffInfo::KEY,
+                'id'
+            ],
+
+            [
+                [
+                    'id'    => true
+                ],
+                [
+                    'assoc' => [
+                        'id'    => 'integer'
+                    ]
+                ],
+                StructureDiffInfo::TYPE,
+                'id.var:type'
+            ],
+
+            [
+                [
+                    'id'    => 1,
+                    'children' => [
+                        [
+                            'id' => 3,
+                            'children' => []
+                        ],
+
+                        [
+                            'id' => 5,
+                            'children' => null
+                        ],
+
+                        []
+                    ]
+                ],
+                [
+                    'assoc' => [
+                        'id'    => 'integer',
+                        'children' => [
+                            'values' => [
+                                'id' => 'integer',
+                                'children' => 'array|null'
+                            ]
+                        ]
+                    ]
+                ],
+                StructureDiffInfo::KEY,
+                'children.id'
+            ],
 
         ];
     }
