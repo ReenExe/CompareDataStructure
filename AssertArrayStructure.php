@@ -8,7 +8,7 @@ class AssertArrayStructure
 
         if (empty($self)) $self = new self;
 
-        return $self->execute($data, $structure);
+        return $self->compare($data, $structure);
     }
 
     private function checkTypes($value, array $types)
@@ -21,7 +21,7 @@ class AssertArrayStructure
         return in_array(strtolower(gettype($value)), $types);
     }
 
-    private function execute($data, $structure)
+    private function compare($data, $structure)
     {
         if (is_string($structure)) {
             $needTypes = explode('|', $structure);
@@ -47,37 +47,19 @@ class AssertArrayStructure
 
                 if (isset($structure['assoc'])) {
 
-                    foreach ($structure['assoc'] as $key => $subStructure) {
-
-                        if (!array_key_exists($key, $data)) {
-
-                            return $this->structureError($key, 'Отсутствует ключ');
-
-                        }
-
-                        if (is_array($error = $this->execute($data[$key], $subStructure))) {
-
-                            return $this->structureError($key, 'Разность структуры', $error);
-                        }
+                    if ($error = $this->assoc($structure['assoc'], $data)) {
+                        return $error;
                     }
 
                 } elseif(isset($structure['values'])) {
 
                     if (is_array($structure['values'])) {
                         foreach ($data as $subData) {
-                            foreach ($structure['values'] as $key => $subStructure) {
 
-                                if (!array_key_exists($key, $subData)) {
-
-                                    return $this->structureError($key, 'Отсутствует ключ');
-
-                                };
-
-                                if (is_array($error = $this->execute($subData[$key], $subStructure))) {
-
-                                    return $this->structureError($key, 'Разность структуры', $error);
-                                }
+                            if ($error = $this->assoc($structure['values'], $subData)) {
+                                return $error;
                             }
+
                         }
                     } elseif (is_string($structure['values'])) {
                         $needTypes = explode('|', $structure['values']);
@@ -101,6 +83,23 @@ class AssertArrayStructure
         }
 
         return true;
+    }
+
+    private function assoc(array $assoc, array $data)
+    {
+        foreach ($assoc as $key => $structure) {
+
+            if (!array_key_exists($key, $data)) {
+
+                return $this->structureError($key, 'Отсутствует ключ');
+
+            };
+
+            if (is_array($error = $this->compare($data[$key], $structure))) {
+
+                return $this->structureError($key, 'Разность структуры', $error);
+            }
+        }
     }
 
     private function structureError($key, $message, array $error = [])
