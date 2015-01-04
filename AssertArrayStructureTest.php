@@ -130,6 +130,14 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
 
             /* ~ */
             [
+                ['men', 'women'],
+                [
+                    'set' => ['men', 'women', 'unisex']
+                ]
+            ],
+
+            /* ~ */
+            [
                 [
                     'id'    => 1,
                     'name'  => 'Alex',

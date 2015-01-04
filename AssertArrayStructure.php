@@ -72,7 +72,7 @@ class AssertArrayStructure
              */
             if (isset($structure['set'])) {
 
-                if (array_search($data, $structure['set']) === false) {
+                if (array_diff((array) $data, $structure['set'])) {
                     return $this->createDiff('set:out', StructureDiffInfo::TYPE);
                 }
 
