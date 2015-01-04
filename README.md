@@ -81,3 +81,24 @@ And we want to check these structures through the settings:
     ]
 ]
 ```
+
+Also:
+------------
+We can test the simple types
+```json
+1
+```
+```php
+'integer'
+```
+or
+```php
+array_merge(
+    range(1, 100),
+    range('a', 'z'),
+    [true, false]
+)
+```
+```php
+['values' => 'integer|string|boolean']
+```
