@@ -89,7 +89,7 @@ class AssertArrayStructure
                         foreach ($data as $subData) {
 
                             if ($diff = $this->assoc($structure['values'], $subData)) {
-                                return $diff;
+                                return $this->processDiff($diff, '[]');
                             }
 
                         }

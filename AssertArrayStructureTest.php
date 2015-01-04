@@ -236,7 +236,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                     ]
                 ],
                 StructureDiffInfo::KEY,
-                'children.id'
+                'children.[].id'
             ],
 
             /* ~ */
