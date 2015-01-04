@@ -38,7 +38,7 @@ You have REST API method that return response like:
             "title": "Code Complete"
         }
     ],
-    ...
+    "social": ["GitHub", "LinkedIn"]
 }
 ```
 And we want to check these structures through the settings:
@@ -48,7 +48,9 @@ And we want to check these structures through the settings:
         'id'    => 'integer',
         'name'  => 'string',
         'location'  => 'integer',
-        'gender'    => 'string',
+        'gender'    => [
+            'set' => ['men', 'women', null]
+        ],
         'joined'    => [
             'assoc' => [
                 'source'    => 'integer|null',
@@ -76,6 +78,11 @@ And we want to check these structures through the settings:
             'values' => [
                 'author' => 'string',
                 'title'  => 'string',
+            ]
+        ],
+        'social' => [
+            'set' => [
+                'GitHub', 'LinkedIn', 'Facebook', 'Google', "Twitter",
             ]
         ]
     ]
@@ -126,7 +133,7 @@ Else
 `@TODO` or to be continued...
 ------------
 
-Together with the structures of `assoc`,` values` - there is a desire to add structure `range`,` set`
+Together with the structures of `assoc`,` values`, `set` - there is a desire to add structure `range`
 Perhaps also worth adding the ability to set "user types" and they "recursion"
 
 Alternatives:

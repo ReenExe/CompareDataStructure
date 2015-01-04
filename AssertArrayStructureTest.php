@@ -205,7 +205,8 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                                 "author": "Steve McConnell",
                                 "title": "Code Complete"
                             }
-                        ]
+                        ],
+                        "social": ["GitHub", "LinkedIn" ]
                     }
 JSON
                 , true),
@@ -214,7 +215,9 @@ JSON
                         'id'    => 'integer',
                         'name'  => 'string',
                         'location'  => 'integer',
-                        'gender'    => 'string',
+                        'gender'    => [
+                            'set' => ['men', 'women', null]
+                        ],
                         'joined'    => [
                             'assoc' => [
                                 'source'    => 'integer|null',
@@ -242,6 +245,11 @@ JSON
                             'values' => [
                                 'author' => 'string',
                                 'title'  => 'string',
+                            ]
+                        ],
+                        'social' => [
+                            'set' => [
+                                'GitHub', 'LinkedIn', 'Facebook', 'Google', "Twitter",
                             ]
                         ]
                     ]
