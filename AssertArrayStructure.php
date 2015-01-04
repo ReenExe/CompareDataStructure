@@ -33,6 +33,11 @@ class StructureDiffInfo
 
 class AssertArrayStructure
 {
+    /**
+     * @param $data
+     * @param $structure
+     * @return bool|StructureDiffInfo
+     */
     public static function check($data, $structure)
     {
         static $self;

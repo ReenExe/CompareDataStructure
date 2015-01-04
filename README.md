@@ -113,3 +113,11 @@ If all right - return
 ```php
 true
 ```
+Else
+```php
+     /**
+      @var $diff StructureDiffInfo
+      @method StructureDiffInfo::getMessage
+      @method StructureDiffInfo::getPath
+     */
+```
