@@ -37,6 +37,47 @@ You have REST API method that return response like:
             "author": "Steve McConnell",
             "title": "Code Complete"
         }
-    ]
+    ],
+    ...
 }
+```
+And we want to check these structures through the settings:
+```php
+[
+    'assoc' => [
+        'id'    => 'integer',
+        'name'  => 'string',
+        'location'  => 'integer',
+        'gender'    => 'string',
+        'joined'    => [
+            'assoc' => [
+                'source'    => 'integer|null',
+                'at'        => 'string'
+            ]
+        ],
+        'friends' => [
+            'type' => 'null',
+            'values' => [
+                'id'    => 'integer',
+                'name'  => 'string'
+            ]
+        ],
+        'interests' => [
+            'type' => 'null',
+            'values' => 'string'
+        ],
+        'games' => [
+            'type'  => 'null',
+            'values' => [
+                'title' => 'string'
+            ]
+        ],
+        'books' => [
+            'values' => [
+                'author' => 'string',
+                'title'  => 'string',
+            ]
+        ]
+    ]
+]
 ```
