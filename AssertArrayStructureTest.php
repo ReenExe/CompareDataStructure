@@ -153,6 +153,84 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
                 ]
             ],
 
+            /**
+             * README
+             */
+            [
+                json_decode(
+                    <<<JSON
+                    {
+                        "id": 3,
+                        "name": "Alex",
+                        "location": 3,
+                        "gender": "men",
+                        "joined": {
+                            "source": 1,
+                            "at": "2011-11-11 11:11:11"
+                        },
+                        "friends": [
+                            {
+                                "id": 7,
+                                "name": "Alice"
+                            },
+                            {
+                                "id": 8,
+                                "name": "Bob"
+                            }
+                        ],
+                        "interests": ["programming", "books", "sport"],
+                        "games": null,
+                        "books": [
+                            {
+                                "author": "Достоевский Фёдор Михайлович",
+                                "title": "Преступление и наказание"
+                            },
+                            {
+                                "author": "Steve McConnell",
+                                "title": "Code Complete"
+                            }
+                        ]
+                    }
+JSON
+                , true),
+                [
+                    'assoc' => [
+                        'id'    => 'integer',
+                        'name'  => 'string',
+                        'location'  => 'integer',
+                        'gender'    => 'string',
+                        'joined'    => [
+                            'assoc' => [
+                                'source'    => 'integer|null',
+                                'at'        => 'string'
+                            ]
+                        ],
+                        'friends' => [
+                            'type' => 'null',
+                            'values' => [
+                                'id'    => 'integer',
+                                'name'  => 'string'
+                            ]
+                        ],
+                        'interests' => [
+                            'type' => 'null',
+                            'values' => 'string'
+                        ],
+                        'games' => [
+                            'type'  => 'null',
+                            'values' => [
+                                'title' => 'string'
+                            ]
+                        ],
+                        'books' => [
+                            'values' => [
+                                'author' => 'string',
+                                'title'  => 'string',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
 
         ];
     }
