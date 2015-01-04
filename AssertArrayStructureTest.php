@@ -122,6 +122,14 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
 
             /* ~ */
             [
+                'men',
+                [
+                    'set' => ['men', 'women', 'unisex']
+                ]
+            ],
+
+            /* ~ */
+            [
                 [
                     'id'    => 1,
                     'name'  => 'Alex',
@@ -230,7 +238,7 @@ JSON
                         ]
                     ]
                 ]
-            ]
+            ],
 
         ];
     }
@@ -374,6 +382,16 @@ JSON
                 ['values' => 'string'],
                 StructureDiffInfo::TYPE,
                 'array:values'
+            ],
+
+            /* ~ */
+            [
+                'boy',
+                [
+                    'set' => ['men', 'women', 'unisex']
+                ],
+                StructureDiffInfo::TYPE,
+                'set:out'
             ],
 
             [
