@@ -102,3 +102,11 @@ array_merge(
 ```php
 ['values' => 'integer|string|boolean']
 ```
+
+Use:
+------------
+```php
+AssertArrayStructure::check($data, $structure)
+```
+
+If all right - return ```php true ```
