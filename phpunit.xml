@@ -2,6 +2,7 @@
     <testsuites>
         <testsuite name="ArrayStructure">
             <file>AssertArrayStructureTest.php</file>
+            <file>StructureDiffInfoTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

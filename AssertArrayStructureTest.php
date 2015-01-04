@@ -1,5 +1,6 @@
 <?php
 
+require_once 'StructureDiffInfo.php';
 require_once 'AssertArrayStructure.php';
 
 class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
