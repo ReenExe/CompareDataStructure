@@ -121,3 +121,12 @@ Else
       @method StructureDiffInfo::getPath
      */
 ```
+
+```php
+/* @TODO: */
+```
+or to be continued...
+------------
+
+Together with the structures of `assoc`,` values` - there is a desire to add structure `range`,` set`
+Perhaps also worth adding the ability to set "user types" and they "recursion"
