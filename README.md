@@ -109,4 +109,7 @@ Use:
 AssertArrayStructure::check($data, $structure)
 ```
 
-If all right - return ```php true ```
+If all right - return
+```php
+true
+```
