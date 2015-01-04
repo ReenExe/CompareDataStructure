@@ -86,10 +86,10 @@ class AssertArrayStructure
                 } elseif(isset($structure['values'])) {
 
                     if (is_array($structure['values'])) {
-                        foreach ($data as $subData) {
+                        foreach ($data as $key => $subData) {
 
                             if ($diff = $this->assoc($structure['values'], $subData)) {
-                                return $this->processDiff($diff, '[]');
+                                return $this->processDiff($diff, "[$key]");
                             }
 
                         }
