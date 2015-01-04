@@ -88,7 +88,7 @@ class AssertArrayStructure
                 }
 
                 if (!$this->checkTypes($data, $needTypes)) {
-                    return $this->createDiff('type', StructureDiffInfo::TYPE);
+                    return $this->createDiff('var:type', StructureDiffInfo::TYPE);
                 }
 
                 if (is_array($data)) {
