@@ -112,7 +112,7 @@ class AssertArrayStructure
 
                 } else {
 
-                    return $this->createDiff('array:type', StructureDiffInfo::CONFIG);
+                    return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
                 }
             }
 
@@ -133,7 +133,7 @@ class AssertArrayStructure
         }
     }
 
-    private function createDiff($key, $message, StructureDiffInfo $error = null)
+    private function createDiff($key, $message)
     {
         return $this->processDiff(new StructureDiffInfo($message), $key);
     }

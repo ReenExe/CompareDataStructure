@@ -369,6 +369,21 @@ JSON
                 'bestFriend.id.var:type'
             ],
 
+            [
+                [true], //diff
+                ['values' => 'string'],
+                StructureDiffInfo::TYPE,
+                'array:values'
+            ],
+
+            [
+                [true],
+                [/*
+                 * undefined structure
+                */],
+                StructureDiffInfo::CONFIG,
+                'structure:type'
+            ],
         ];
     }
 
