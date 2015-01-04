@@ -81,6 +81,7 @@ And we want to check these structures through the settings:
     ]
 ]
 ```
+In this example, tried to describe the full scope
 
 Also:
 ------------
@@ -122,11 +123,13 @@ Else
      */
 ```
 
-```php
-/* @TODO: */
-```
-or to be continued...
+`@TODO` or to be continued...
 ------------
 
 Together with the structures of `assoc`,` values` - there is a desire to add structure `range`,` set`
 Perhaps also worth adding the ability to set "user types" and they "recursion"
+
+Alternatives:
+------------
+AssertJsonStructure: (https://github.com/t4web/AssertJsonStructure)
+    - part of it was used to create, also `used idea of checking the structure`
