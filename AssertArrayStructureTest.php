@@ -402,6 +402,16 @@ JSON
                 'set:out'
             ],
 
+            /* ~ */
+            [
+                ['boy', 'girl'],
+                [
+                    'set' => ['men', 'women', 'unisex']
+                ],
+                StructureDiffInfo::TYPE,
+                'set:out'
+            ],
+
             [
                 [true],
                 [/*
