@@ -5,7 +5,7 @@ class AssertArrayStructure
     /**
      * @param $data
      * @param $structure
-     * @return bool|StructureDiffInfo
+     * @return true|StructureDiffInfo
      */
     public static function check($data, $structure)
     {
@@ -16,6 +16,17 @@ class AssertArrayStructure
         return $self->compare($data, $structure) ?: true;
     }
 
+    private function compare($data, $structure)
+    {
+        if (is_string($structure)) {
+            return $this->diffType($data, $structure);
+        }
+
+        if (is_array($structure)) {
+            return $this->diffStructure($data, $structure);
+        }
+    }
+
     private function checkTypes($value, array $types)
     {
         /**
@@ -23,81 +34,70 @@ class AssertArrayStructure
          * К примеру формата даты или длины
          */
 
-        return in_array(strtolower(gettype($value)), $types);
+        return in_array($this->getType($value), $types);
     }
 
-    private function compare($data, $structure)
+    private function diffType($data, $structure)
     {
-        if (is_string($structure)) {
-            $needTypes = explode('|', $structure);
+        $needTypes = explode('|', $structure);
 
-            if (!$this->checkTypes($data, $needTypes)) {
-                return $this->createDiff('var:type', StructureDiffInfo::TYPE);
-            }
+        if (!$this->checkTypes($data, $needTypes)) {
+            return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+        }
+    }
 
-        } elseif (is_array($structure)) {
-            /**
-             * structure `set`
-             */
-            if (isset($structure['set'])) {
+    private function diffSet($data, $set)
+    {
+        if (array_diff((array) $data, (array) $set)) {
+            return $this->createDiff('set:out', StructureDiffInfo::TYPE);
+        }
+    }
 
-                if (array_diff((array) $data, $structure['set'])) {
-                    return $this->createDiff('set:out', StructureDiffInfo::TYPE);
+    private function diffStructure($data, array $structure)
+    {
+        /**
+         * structure `set`
+         */
+        if (isset($structure['set'])) {
+            return $this->diffSet($data, $structure['set']);
+        }
+
+        if (!$this->checkTypes($data, $this->getStructureType($structure))) {
+            return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+        }
+
+        if (is_array($data)) {
+
+            if (isset($structure['assoc'])) {
+
+                if ($diff = $this->assoc($structure['assoc'], $data)) {
+                    return $diff;
+                }
+
+            } elseif(isset($structure['values'])) {
+
+                if (is_array($structure['values'])) {
+                    foreach ($data as $key => $subData) {
+
+                        if ($diff = $this->assoc($structure['values'], $subData)) {
+                            return $this->processDiff($diff, "[$key]");
+                        }
+
+                    }
+                } elseif (is_string($structure['values'])) {
+                    $needTypes = explode('|', $structure['values']);
+
+                    $arrayTypes = array_map([$this, 'getType'], $data);
+
+                    if (array_diff($arrayTypes, $needTypes)) {
+                        return $this->createDiff('array:values', StructureDiffInfo::TYPE);
+                    }
                 }
 
             } else {
 
-                $needTypes = ['array'];
-
-                if (isset($structure['type'])) {
-                    $needTypes = array_merge(
-                        $needTypes,
-                        explode('|', $structure['type'])
-                    );
-                }
-
-                if (!$this->checkTypes($data, $needTypes)) {
-                    return $this->createDiff('var:type', StructureDiffInfo::TYPE);
-                }
-
-                if (is_array($data)) {
-
-                    if (isset($structure['assoc'])) {
-
-                        if ($diff = $this->assoc($structure['assoc'], $data)) {
-                            return $diff;
-                        }
-
-                    } elseif(isset($structure['values'])) {
-
-                        if (is_array($structure['values'])) {
-                            foreach ($data as $key => $subData) {
-
-                                if ($diff = $this->assoc($structure['values'], $subData)) {
-                                    return $this->processDiff($diff, "[$key]");
-                                }
-
-                            }
-                        } elseif (is_string($structure['values'])) {
-                            $needTypes = explode('|', $structure['values']);
-
-                            $arrayTypes = array_map(function($entry) {
-                                return strtolower(gettype($entry));
-                            }, $data);
-
-                            if (array_diff($arrayTypes, $needTypes)) {
-                                return $this->createDiff('array:values', StructureDiffInfo::TYPE);
-                            }
-                        }
-
-                    } else {
-
-                        return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
-                    }
-                }
-
+                return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
             }
-
         }
     }
 
@@ -113,6 +113,25 @@ class AssertArrayStructure
                 return $this->processDiff($diff, $key);
             }
         }
+    }
+
+    private function getType($value)
+    {
+        return strtolower(gettype($value));
+    }
+
+    private function getStructureType(array $structure)
+    {
+        $types = ['array'];
+
+        if (isset($structure['type'])) {
+            $types = array_merge(
+                $types,
+                explode('|', $structure['type'])
+            );
+        }
+
+        return $types;
     }
 
     private function createDiff($key, $message)
