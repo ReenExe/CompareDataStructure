@@ -51,6 +51,10 @@ class AssertArrayStructure
         if (array_diff((array) $data, (array) $set)) {
             return $this->createDiff('set:out', StructureDiffInfo::TYPE);
         }
+
+        /**
+         * TODO: Сделать проверку через "===" in_array($needle, $haystack, $strict = true)
+         */
     }
 
     private function diffStructure($data, array $structure)
