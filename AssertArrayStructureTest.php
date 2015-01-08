@@ -427,6 +427,16 @@ JSON
 
             /* ~ */
             [
+                '200',
+                [
+                    'set' => [200, 500]
+                ],
+                StructureDiffInfo::TYPE,
+                'var:type'
+            ],
+
+            /* ~ */
+            [
                 ['boy', 'girl'],
                 [
                     'set' => ['men', 'women', 'unisex']

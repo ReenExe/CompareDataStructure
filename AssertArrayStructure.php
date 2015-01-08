@@ -48,13 +48,19 @@ class AssertArrayStructure
 
     private function diffSet($data, $set)
     {
-        if (array_diff((array) $data, (array) $set)) {
+        $data = (array) $data;
+        $set = (array) $set;
+
+        if (array_diff($data, $set)) {
             return $this->createDiff('set:out', StructureDiffInfo::TYPE);
         }
 
-        /**
-         * TODO: Сделать проверку через "===" in_array($needle, $haystack, $strict = true)
-         */
+
+        foreach ($data as $value) {
+            if (in_array($value, $set, true)) continue;
+
+            return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+        }
     }
 
     private function diffStructure($data, array $structure)
