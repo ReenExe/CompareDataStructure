@@ -264,7 +264,7 @@ JSON
                         ],
                         'social' => [
                             'set' => [
-                                'GitHub', 'LinkedIn', 'Facebook', 'Google', "Twitter",
+                                'GitHub', 'LinkedIn', 'Facebook', 'Google', 'Twitter',
                             ]
                         ]
                     ]
@@ -282,10 +282,15 @@ JSON
         $diff = AssertArrayStructure::check($data, $structure);
 
         $this->assertTrue(
-            ($diff instanceof StructureDiffInfo)
-            && $diff->getMessage() === $message
-            && $diff->getPath() === $path
+            $this->compareDiff($diff, $message, $path)
         );
+    }
+
+    private function compareDiff($diff, $message, $path)
+    {
+        return ($diff instanceof StructureDiffInfo)
+            && $diff->getMessage() === $message
+            && $diff->getPath() === $path;
     }
 
     public function arrayStructureDiffProvider()
@@ -295,6 +300,11 @@ JSON
             /* ~ */
             [
                 true, 'integer', StructureDiffInfo::TYPE, 'var:type'
+            ],
+
+            /* ~ */
+            [
+                true, null, StructureDiffInfo::CONFIG, 'undefined:structure'
             ],
 
             /* ~ */
@@ -473,14 +483,17 @@ JSON
         );
     }
 
+    private function assertCustomSuccess($data, $structure, $custom)
+    {
+        $this->assertTrue(AssertArrayStructure::check($data, $structure, $custom));
+    }
+
     /**
      * @dataProvider customProvider
      */
     public function testCustom($data, $structure, $custom)
     {
-        AssertArrayStructure::addCustom($custom);
-
-        $this->assertArrayStructureSuccess($data, $structure);
+        $this->assertCustomSuccess($data, $structure, $custom);
     }
 
     public function customProvider()
@@ -505,4 +518,40 @@ JSON
         ];
     }
 
+    /**
+     * @dataProvider customDiffProvider
+     */
+    public function testCustomFail($data, $structure, $custom, $message, $path)
+    {
+        $diff = AssertArrayStructure::check($data, $structure, $custom);
+
+        $this->assertTrue(
+            $this->compareDiff($diff, $message, $path)
+        );
+    }
+
+    public function customDiffProvider()
+    {
+        return [
+            [
+                [
+                    'id' => 1,
+                    'name' => 'Alex',
+                    // diff
+                ],
+                'profile',
+                [
+                    'profile' => [
+                        'assoc' => [
+                            'id' => 'integer',
+                            'name' => 'string',
+                            'enabled' => 'boolean'
+                        ]
+                    ]
+                ],
+                StructureDiffInfo::KEY,
+                'custom:type:profile.enabled'
+            ]
+        ];
+    }
 }

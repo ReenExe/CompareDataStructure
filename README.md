@@ -82,7 +82,7 @@ And we want to check these structures through the settings:
         ],
         'social' => [
             'set' => [
-                'GitHub', 'LinkedIn', 'Facebook', 'Google', "Twitter",
+                'GitHub', 'LinkedIn', 'Facebook', 'Google', 'Twitter',
             ]
         ]
     ]

@@ -4,20 +4,35 @@ class AssertArrayStructure
 {
     private $custom = [];
 
+    private $temporaryCustom = [];
+
+    private $exists = [];
+
     public static function addCustom(array $custom)
     {
         $instance = self::instance();
 
         $instance->custom = $instance->custom + $custom;
     }
+
+    private function initialize(array $temporaryCustom)
+    {
+        $this->temporaryCustom = $this->custom + $temporaryCustom;
+
+        $this->exists = array_keys($this->temporaryCustom);
+    }
     /**
      * @param $data
      * @param $structure
      * @return true|StructureDiffInfo
      */
-    public static function check($data, $structure)
+    public static function check($data, $structure, array $custom = [])
     {
-        return self::instance()->compare($data, $structure) ?: true;
+        $instance = self::instance();
+
+        $instance->initialize($custom);
+
+        return $instance->compare($data, $structure) ?: true;
     }
 
     private function compare($data, $structure)
@@ -29,6 +44,8 @@ class AssertArrayStructure
         if (is_array($structure)) {
             return $this->diffStructure($data, $structure);
         }
+
+        return $this->createDiff('undefined:structure', StructureDiffInfo::CONFIG);
     }
 
     private function checkTypes($value, array $types)
@@ -40,16 +57,16 @@ class AssertArrayStructure
 
         if (in_array($this->getType($value), $types)) return /* success */;
 
-        if ($this->custom) {
+        if ($this->exists) {
 
-            if ($intersect = array_intersect($types, array_keys($this->custom))) {
+            if ($intersect = array_intersect($types, $this->exists)) {
                 foreach ($intersect as $key) {
-                    $diff = $this->compare($value, $this->custom[$key]);
+                    $diff = $this->compare($value, $this->temporaryCustom[$key]);
 
                     if (empty($diff)) return /* success */;
                 }
 
-                return $diff;
+                return $this->processDiff($diff, "custom:type:$key");
             }
         }
 
