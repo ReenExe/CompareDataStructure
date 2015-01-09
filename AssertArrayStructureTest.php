@@ -551,6 +551,32 @@ JSON
                 ],
                 StructureDiffInfo::KEY,
                 'custom:type:profile.enabled'
+            ],
+
+            /* recursion */
+            [
+                [
+                    'name' => 'Mike',
+                    'referral' => [
+                        'name' => 'Bob',
+                        'referral' => false, // diff
+                    ]
+                ],
+                'referralLink',
+                [
+                    'referralLink' => [
+                        'assoc' => [
+                            'name' => 'string',
+                            'referral' => 'referralLink|null'
+                        ]
+                    ]
+                ],
+                StructureDiffInfo::TYPE,
+                'custom:type:referralLink.referral.'
+
+                . 'custom:type:referralLink.referral.'
+
+                . 'custom:type:referralLink.var:type'
             ]
         ];
     }
