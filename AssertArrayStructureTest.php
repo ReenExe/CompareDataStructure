@@ -472,4 +472,37 @@ JSON
             $diff instanceof StructureDiffInfo
         );
     }
+
+    /**
+     * @dataProvider customProvider
+     */
+    public function testCustom($data, $structure, $custom)
+    {
+        AssertArrayStructure::addCustom($custom);
+
+        $this->assertArrayStructureSuccess($data, $structure);
+    }
+
+    public function customProvider()
+    {
+        return [
+
+            [
+                [
+                    'id' => 1,
+                    'name' => 'Alex'
+                ],
+                'profile',
+                [
+                    'profile' => [
+                        'assoc' => [
+                            'id' => 'integer',
+                            'name' => 'string'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
 }

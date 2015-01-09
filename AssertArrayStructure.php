@@ -2,6 +2,14 @@
 
 class AssertArrayStructure
 {
+    private $custom = [];
+
+    public static function addCustom(array $custom)
+    {
+        $instance = self::instance();
+
+        $instance->custom = $instance->custom + $custom;
+    }
     /**
      * @param $data
      * @param $structure
@@ -9,11 +17,7 @@ class AssertArrayStructure
      */
     public static function check($data, $structure)
     {
-        static $self;
-
-        if (empty($self)) $self = new self;
-
-        return $self->compare($data, $structure) ?: true;
+        return self::instance()->compare($data, $structure) ?: true;
     }
 
     private function compare($data, $structure)
@@ -34,15 +38,30 @@ class AssertArrayStructure
          * К примеру формата даты или длины
          */
 
-        return in_array($this->getType($value), $types);
+        if (in_array($this->getType($value), $types)) return /* success */;
+
+        if ($this->custom) {
+
+            if ($intersect = array_intersect($types, array_keys($this->custom))) {
+                foreach ($intersect as $key) {
+                    $diff = $this->compare($value, $this->custom[$key]);
+
+                    if (empty($diff)) return /* success */;
+                }
+
+                return $diff;
+            }
+        }
+
+        return $this->createDiff('var:type', StructureDiffInfo::TYPE);
     }
 
     private function diffType($data, $structure)
     {
         $needTypes = explode('|', $structure);
 
-        if (!$this->checkTypes($data, $needTypes)) {
-            return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+        if ($diff = $this->checkTypes($data, $needTypes)) {
+            return $diff;
         }
     }
 
@@ -72,8 +91,8 @@ class AssertArrayStructure
             return $this->diffSet($data, $structure['set']);
         }
 
-        if (!$this->checkTypes($data, $this->getStructureType($structure))) {
-            return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+        if ($diff = $this->checkTypes($data, $this->getStructureType($structure))) {
+            return $diff;
         }
 
         if (is_array($data)) {
@@ -154,5 +173,15 @@ class AssertArrayStructure
         $diff->addPath($key);
 
         return $diff;
+    }
+
+    /**
+     * @return AssertArrayStructure
+     */
+    private function instance()
+    {
+        static $self;
+
+        return $self ?: $self = new self;
     }
 }
