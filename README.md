@@ -130,11 +130,58 @@ Else
      */
 ```
 
+Custom types (or `user types`):
+------------
+We can set user-defined types once and use them on:
+```php
+    AssertArrayStructure::addCustom(array $custom)
+```
+Example:
+```php
+AssertArrayStructure::addCustom(                [
+    'profile' => [
+        'assoc' => [
+            'id' => 'integer',
+            'name' => 'string'
+        ]
+    ]
+]);
+...
+AssertArrayStructure::check($profile, 'profile');
+...
+AssertArrayStructure::check($response, 'profile');
+...
+```
+And also to establish the types of one-time inspection:
+```php
+AssertArrayStructure::check(
+    [
+        'value' => 1,
+        'next' => [
+            'value' => 3,
+            'next' => [
+                'value' => 5,
+                'next' => null
+            ]
+        ]
+    ],
+    'link',
+    [
+        'link' => [
+            'assoc' => [
+                'value' => 'integer',
+                'next'  => 'link|null'
+            ]
+        ]
+    ]
+);
+```
+In `user types` - possibility of recursive checks
+
 `@TODO` or to be continued...
 ------------
 
 Together with the structures of `assoc`,` values`, `set` - there is a desire to add structure `range`
-Perhaps also worth adding the ability to set "user types" and they "recursion"
 
 Alternatives:
 ------------

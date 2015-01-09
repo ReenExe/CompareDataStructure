@@ -514,6 +514,29 @@ JSON
                         ]
                     ]
                 ]
+            ],
+
+            /* recursion from `README` */
+            [
+                [
+                    'value' => 1,
+                    'next' => [
+                        'value' => 3,
+                        'next' => [
+                            'value' => 5,
+                            'next' => null
+                        ]
+                    ]
+                ],
+                'link',
+                [
+                    'link' => [
+                        'assoc' => [
+                            'value' => 'integer',
+                            'next'  => 'link|null'
+                        ]
+                    ]
+                ]
             ]
         ];
     }
