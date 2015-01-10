@@ -1,6 +1,8 @@
 Assert Structure
 ====================
 
+[![Build Status](https://travis-ci.org/ReenExe/AssertArrayStructure.svg)](https://travis-ci.org/ReenExe/AssertArrayStructure)
+
 Native PHP assert for testing REST API JSON response
 
 Example:
