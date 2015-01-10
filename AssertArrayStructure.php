@@ -21,6 +21,10 @@ class AssertArrayStructure
 
         $this->exists = array_keys($this->temporaryCustom);
     }
+
+    /**
+     * TODO: Возможно стоит всегда возвращать в одном формате. Экземпляр класса с методом `isEqual`
+     */
     /**
      * @param $data
      * @param $structure
