@@ -200,7 +200,7 @@ class AssertArrayStructure
     /**
      * @return AssertArrayStructure
      */
-    private function instance()
+    private static function instance()
     {
         static $self;
 
