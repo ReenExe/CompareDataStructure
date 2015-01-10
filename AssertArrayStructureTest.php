@@ -537,6 +537,21 @@ JSON
                 $profile
             ],
 
+            /* type alias */
+            [
+
+                [
+                    'Tom', 'Bob', 'Lee', null
+                ],
+                [
+                    'values' => 'string:alias'
+                ],
+                [
+                    'string:alias' => 'string|null'
+                ]
+
+            ],
+
             /* recursion from `README` */
             [
                 [
