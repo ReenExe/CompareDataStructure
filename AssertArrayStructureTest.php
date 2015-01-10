@@ -603,4 +603,33 @@ JSON
             ]
         ];
     }
+
+    public function testGlobalCustom()
+    {
+        $profileRuby = [
+            'id' => 7,
+            'name' => 'Ruby'
+        ];
+
+        $diff = AssertArrayStructure::check($profileRuby, 'profile');
+
+        $this->assertTrue(
+            $diff instanceof StructureDiffInfo
+        );
+
+        $customProfile = [
+            'profile' => [
+                'assoc' => [
+                    'id' => 'integer',
+                    'name' => 'string'
+                ]
+            ]
+        ];
+
+        AssertArrayStructure::addCustom($customProfile);
+
+        $this->assertTrue(
+            AssertArrayStructure::check($profileRuby, 'profile')
+        );
+    }
 }
