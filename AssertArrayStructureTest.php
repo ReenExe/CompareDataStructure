@@ -419,10 +419,10 @@ JSON
             ],
 
             [
-                [true], //diff
+                [1 => true], //diff
                 ['values' => 'string'],
                 StructureDiffInfo::TYPE,
-                'array:values'
+                '[1].var:type'
             ],
 
             /* ~ */
@@ -498,6 +498,15 @@ JSON
 
     public function customProvider()
     {
+        $profile =                 [
+            'profile' => [
+                'assoc' => [
+                    'id' => 'integer',
+                    'name' => 'string'
+                ]
+            ]
+        ];
+
         return [
 
             [
@@ -506,14 +515,26 @@ JSON
                     'name' => 'Alex'
                 ],
                 'profile',
+                $profile
+            ],
+
+            [
                 [
-                    'profile' => [
-                        'assoc' => [
-                            'id' => 'integer',
-                            'name' => 'string'
-                        ]
-                    ]
-                ]
+                    [
+                        'id' => 1,
+                        'name' => 'Alex'
+                    ],
+
+                    [
+                        'id' => 3,
+                        'name' => 'Tom'
+                    ],
+
+                ],
+                [
+                    'values' => 'profile'
+                ],
+                $profile
             ],
 
             /* recursion from `README` */

@@ -133,10 +133,11 @@ class AssertArrayStructure
                 } elseif (is_string($structure['values'])) {
                     $needTypes = explode('|', $structure['values']);
 
-                    $arrayTypes = array_map([$this, 'getType'], $data);
+                    foreach ($data as $key => $subData) {
 
-                    if (array_diff($arrayTypes, $needTypes)) {
-                        return $this->createDiff('array:values', StructureDiffInfo::TYPE);
+                        if ($diff = $this->checkTypes($subData, $needTypes)) {
+                            return $this->processDiff($diff, "[$key]");
+                        }
                     }
                 }
 
