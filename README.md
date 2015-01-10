@@ -155,7 +155,7 @@ AssertArrayStructure::check($response, 'profile');
 And also to establish the types of one-time inspection:
 ```php
 AssertArrayStructure::check(
-    [
+    $data = [
         'value' => 1,
         'next' => [
             'value' => 3,
@@ -165,8 +165,8 @@ AssertArrayStructure::check(
             ]
         ]
     ],
-    'link',
-    [
+    $structure = 'link',
+    $custom = [
         'link' => [
             'assoc' => [
                 'value' => 'integer',
