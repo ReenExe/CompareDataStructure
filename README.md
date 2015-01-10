@@ -185,5 +185,7 @@ Together with the structures of `assoc`,` values`, `set` - there is a desire to 
 
 Alternatives:
 ------------
-AssertJsonStructure: (https://github.com/t4web/AssertJsonStructure)
+AssertJsonStructure: https://github.com/t4web/AssertJsonStructure
     - part of it was used to create, also `used idea of checking the structure`
+    
+json-schema: https://github.com/justinrainbow/json-schema
