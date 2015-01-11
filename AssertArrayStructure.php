@@ -4,9 +4,15 @@ class AssertArrayStructure
 {
     private $custom = [];
 
-    private $temporaryCustom = [];
+    /**
+     * @var array
+     */
+    private $temporaryCustom;
 
-    private $exists = [];
+    /**
+     * @var array
+     */
+    private $exists;
 
     public static function addCustom(array $custom)
     {
@@ -70,6 +76,9 @@ class AssertArrayStructure
                     if (empty($diff)) return /* success */;
                 }
 
+                /**
+                 * TODO: Возможно стоит возвращать с наименьшим путем
+                 */
                 return $this->processDiff($diff, "custom:type:$key");
             }
         }
