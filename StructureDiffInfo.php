@@ -14,9 +14,27 @@ class StructureDiffInfo
 
     private $path = [];
 
-    public function __construct($message)
+    private $equal = false;
+
+    private function __construct($equal)
     {
-        $this->message = $message;
+        $this->equal = $equal;
+    }
+
+    public static function createDiff($message)
+    {
+        $self =  new self(false);
+        $self->message = $message;
+        return $self;
+    }
+
+    public static function createEqual()
+    {
+        return new self(true);
+    }
+
+    public function isEqual() {
+        return $this->equal;
     }
 
     public function addPath($key)
@@ -32,5 +50,10 @@ class StructureDiffInfo
     public function getPath()
     {
         return join('.', $this->path);
+    }
+
+    public  function __toString()
+    {
+        return $this->isEqual() ? '' : "{$this->getMessage()} {$this->getPath()}";
     }
 }

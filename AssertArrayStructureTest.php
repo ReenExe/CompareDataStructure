@@ -281,16 +281,14 @@ JSON
     {
         $diff = AssertArrayStructure::check($data, $structure);
 
-        $this->assertTrue(
-            $this->compareDiff($diff, $message, $path)
-        );
+        $this->assertFalse($diff->isEqual());
+
+        $this->assertTrue($this->compareDiff($diff, $message, $path));
     }
 
-    private function compareDiff($diff, $message, $path)
+    private function compareDiff(StructureDiffInfo $diff, $message, $path)
     {
-        return ($diff instanceof StructureDiffInfo)
-            && $diff->getMessage() === $message
-            && $diff->getPath() === $path;
+        return $diff->getMessage() === $message && $diff->getPath() === $path;
     }
 
     public function arrayStructureDiffProvider()
@@ -468,24 +466,19 @@ JSON
 
     private function assertArrayStructureSuccess($data, $structure)
     {
-        $this->assertTrue(AssertArrayStructure::check($data, $structure));
+        $diff = AssertArrayStructure::check($data, $structure);
+
+        $this->assertTrue($diff->isEqual(), (string) $diff);
     }
 
     private function assertArrayStructureFail($data, $structure)
     {
-        /**
-         * Ошибка возвращаются в формате массива
-         */
-        $diff = AssertArrayStructure::check($data, $structure);
-
-        $this->assertTrue(
-            $diff instanceof StructureDiffInfo
-        );
+        $this->assertFalse(AssertArrayStructure::check($data, $structure)->isEqual());
     }
 
     private function assertCustomSuccess($data, $structure, $custom)
     {
-        $this->assertTrue(AssertArrayStructure::check($data, $structure, $custom));
+        $this->assertTrue(AssertArrayStructure::check($data, $structure, $custom)->isEqual());
     }
 
     /**
@@ -584,6 +577,8 @@ JSON
     {
         $diff = AssertArrayStructure::check($data, $structure, $custom);
 
+        $this->assertFalse($diff->isEqual());
+
         $this->assertTrue(
             $this->compareDiff($diff, $message, $path)
         );
@@ -649,9 +644,7 @@ JSON
 
         $diff = AssertArrayStructure::check($profileRuby, 'profile');
 
-        $this->assertTrue(
-            $diff instanceof StructureDiffInfo
-        );
+        $this->assertFalse($diff->isEqual());
 
         $customProfile = [
             'profile' => [
@@ -664,8 +657,6 @@ JSON
 
         AssertArrayStructure::addCustom($customProfile);
 
-        $this->assertTrue(
-            AssertArrayStructure::check($profileRuby, 'profile')
-        );
+        $this->assertTrue(AssertArrayStructure::check($profileRuby, 'profile')->isEqual());
     }
 }

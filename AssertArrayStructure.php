@@ -42,7 +42,7 @@ class AssertArrayStructure
 
         $instance->initialize($custom);
 
-        return $instance->compare($data, $structure) ?: true;
+        return $instance->compare($data, $structure) ?: StructureDiffInfo::createEqual();
     }
 
     private function compare($data, $structure)
@@ -196,7 +196,7 @@ class AssertArrayStructure
 
     private function createDiff($key, $message)
     {
-        return $this->processDiff(new StructureDiffInfo($message), $key);
+        return $this->processDiff(StructureDiffInfo::createDiff($message), $key);
     }
 
     private function processDiff(StructureDiffInfo $diff, $key)
