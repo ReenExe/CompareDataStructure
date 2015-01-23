@@ -116,20 +116,27 @@ array_merge(
 Use:
 ------------
 ```php
+/**
+ * @return StructureDiffInfo
+ */
 AssertArrayStructure::check($data, $structure)
-```
 
-If all right - return
-```php
-true
+/**
+ * @method public bool StructureDiffInfo::isEqual
+ * @method public string StructureDiffInfo::getMessage
+ * @method public string StructureDiffInfo::getPath
+ */
 ```
-Else
+in PHPUnit easy:
 ```php
-     /**
-      @var $diff StructureDiffInfo
-      @method StructureDiffInfo::getMessage
-      @method StructureDiffInfo::getPath
-     */
+...
+public function assertArrayStructureSuccess($data, $structure)
+{
+    $diff = AssertArrayStructure::check($data, $structure);
+
+    $this->assertTrue($diff->isEqual(), (string) $diff);
+}
+...
 ```
 
 Custom types (or `user types`):

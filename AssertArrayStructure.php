@@ -34,7 +34,7 @@ class AssertArrayStructure
     /**
      * @param $data
      * @param $structure
-     * @return true|StructureDiffInfo
+     * @return StructureDiffInfo
      */
     public static function check($data, $structure, array $custom = [])
     {
