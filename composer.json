@@ -1,4 +1,9 @@
 {
+    "name": "ReenExe/CompareDataStructure",
+    "type": "library",
+    "require": {
+        "php": ">=5.4"
+    },
     "require-dev": {
         "phpunit/phpunit": "4.4.*"
     }

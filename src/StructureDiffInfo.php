@@ -1,5 +1,6 @@
 <?php
 
+namespace ReenExe\CompareDataStructure;
 /**
  * TODO: Возможно стоит лучше определить интерфейс и возвращать только его
  *          Чтобы убрать из ответа метод `addPath`

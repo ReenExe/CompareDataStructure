@@ -1,5 +1,7 @@
 <?php
 
+use ReenExe\CompareDataStructure\Comparator;
+use ReenExe\CompareDataStructure\StructureDiffInfo;
 require_once __DIR__ . '/../src/Comparator.php';
 require_once __DIR__ . '/../src/StructureDiffInfo.php';
 

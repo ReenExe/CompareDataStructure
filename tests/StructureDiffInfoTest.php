@@ -1,5 +1,6 @@
 <?php
 
+use ReenExe\CompareDataStructure\StructureDiffInfo;
 require_once __DIR__ . '/../src/StructureDiffInfo.php';
 
 class StructureDiffInfoTest extends \PHPUnit_Framework_TestCase

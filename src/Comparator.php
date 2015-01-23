@@ -1,5 +1,7 @@
 <?php
 
+namespace ReenExe\CompareDataStructure;
+
 class Comparator
 {
     private $custom = [];
