@@ -1,6 +1,6 @@
 <?php
 
-class AssertArrayStructure
+class Comparator
 {
     private $custom = [];
 
@@ -207,7 +207,8 @@ class AssertArrayStructure
     }
 
     /**
-     * @return AssertArrayStructure
+     * @return Comparator
+
      */
     private static function instance()
     {

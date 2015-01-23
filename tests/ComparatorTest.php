@@ -1,16 +1,16 @@
 <?php
 
-require_once 'StructureDiffInfo.php';
-require_once 'AssertArrayStructure.php';
+require_once __DIR__ . '/../src/Comparator.php';
+require_once __DIR__ . '/../src/StructureDiffInfo.php';
 
-class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
+class ComparatorTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider simpleTypeProvider
      */
     public function testSimpleTypeSuccess($data, $structure)
     {
-        $this->assertArrayStructureSuccess($data, $structure);
+        $this->comparatorSuccess($data, $structure);
     }
 
     public function simpleTypeProvider()
@@ -45,7 +45,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
      */
     public function testSimpleTypeFail($data, $structure)
     {
-        $this->assertArrayStructureFail($data, $structure);
+        $this->comparatorFail($data, $structure);
     }
 
     public function simpleTypeFailProvider()
@@ -62,7 +62,7 @@ class AssertArrayStructureTest extends PHPUnit_Framework_TestCase
      */
     public function testArrayStructureSuccess($data, $structure)
     {
-        $this->assertArrayStructureSuccess($data, $structure);
+        $this->comparatorSuccess($data, $structure);
     }
 
     public function arrayStructureSuccessProvider()
@@ -279,7 +279,7 @@ JSON
      */
     public function testArrayStructureDiff($data, $structure, $message, $path)
     {
-        $diff = AssertArrayStructure::check($data, $structure);
+        $diff = Comparator::check($data, $structure);
 
         $this->assertFalse($diff->isEqual());
 
@@ -464,21 +464,21 @@ JSON
         ];
     }
 
-    private function assertArrayStructureSuccess($data, $structure)
+    private function comparatorSuccess($data, $structure)
     {
-        $diff = AssertArrayStructure::check($data, $structure);
+        $diff = Comparator::check($data, $structure);
 
         $this->assertTrue($diff->isEqual(), (string) $diff);
     }
 
-    private function assertArrayStructureFail($data, $structure)
+    private function comparatorFail($data, $structure)
     {
-        $this->assertFalse(AssertArrayStructure::check($data, $structure)->isEqual());
+        $this->assertFalse(Comparator::check($data, $structure)->isEqual());
     }
 
     private function assertCustomSuccess($data, $structure, $custom)
     {
-        $this->assertTrue(AssertArrayStructure::check($data, $structure, $custom)->isEqual());
+        $this->assertTrue(Comparator::check($data, $structure, $custom)->isEqual());
     }
 
     /**
@@ -575,7 +575,7 @@ JSON
      */
     public function testCustomFail($data, $structure, $custom, $message, $path)
     {
-        $diff = AssertArrayStructure::check($data, $structure, $custom);
+        $diff = Comparator::check($data, $structure, $custom);
 
         $this->assertFalse($diff->isEqual());
 
@@ -642,7 +642,7 @@ JSON
             'name' => 'Ruby'
         ];
 
-        $diff = AssertArrayStructure::check($profileRuby, 'profile');
+        $diff = Comparator::check($profileRuby, 'profile');
 
         $this->assertFalse($diff->isEqual());
 
@@ -655,8 +655,8 @@ JSON
             ]
         ];
 
-        AssertArrayStructure::addCustom($customProfile);
+        Comparator::addCustom($customProfile);
 
-        $this->assertTrue(AssertArrayStructure::check($profileRuby, 'profile')->isEqual());
+        $this->assertTrue(Comparator::check($profileRuby, 'profile')->isEqual());
     }
 }

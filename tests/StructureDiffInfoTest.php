@@ -1,6 +1,6 @@
 <?php
 
-require_once 'StructureDiffInfo.php';
+require_once __DIR__ . '/../src/StructureDiffInfo.php';
 
 class StructureDiffInfoTest extends \PHPUnit_Framework_TestCase
 {

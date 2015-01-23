@@ -1,7 +1,6 @@
 Assert Structure
 ====================
-
-[![Build Status](https://travis-ci.org/ReenExe/AssertArrayStructure.svg)](https://travis-ci.org/ReenExe/AssertArrayStructure)
+[![Build Status](https://travis-ci.org/ReenExe/CompareDataStructure.svg)](https://travis-ci.org/ReenExe/CompareDataStructure)
 
 Native PHP assert for testing REST API JSON response
 
@@ -119,7 +118,7 @@ Use:
 /**
  * @return StructureDiffInfo
  */
-AssertArrayStructure::check($data, $structure)
+Comparator::check($data, $structure)
 
 /**
  * @method public bool StructureDiffInfo::isEqual
@@ -132,7 +131,7 @@ in PHPUnit easy:
 ...
 public function assertArrayStructureSuccess($data, $structure)
 {
-    $diff = AssertArrayStructure::check($data, $structure);
+    $diff = Comparator::check($data, $structure);
 
     $this->assertTrue($diff->isEqual(), (string) $diff);
 }
@@ -143,11 +142,11 @@ Custom types (or `user types`):
 ------------
 We can set user-defined types once and use them on:
 ```php
-    AssertArrayStructure::addCustom(array $custom)
+    Comparator::addCustom(array $custom)
 ```
 Example:
 ```php
-AssertArrayStructure::addCustom(                [
+Comparator::addCustom(                [
     'profile' => [
         'assoc' => [
             'id' => 'integer',
@@ -156,14 +155,14 @@ AssertArrayStructure::addCustom(                [
     ]
 ]);
 ...
-AssertArrayStructure::check($profile, 'profile');
+Comparator::check($profile, 'profile');
 ...
-AssertArrayStructure::check($response, 'profile');
+Comparator::check($response, 'profile');
 ...
 ```
 And also to establish the types of one-time inspection:
 ```php
-AssertArrayStructure::check(
+Comparator::check(
     $data = [
         'value' => 1,
         'next' => [
