@@ -15,6 +15,6 @@
         "phpunit/phpunit": "4.4.*"
     },
     "autoload": {
-        "psr-4": {"ReenExe\\CompareDataStructure": "src/"}
+        "psr-4": {"ReenExe\\CompareDataStructure\\": "src/"}
     }
 }
