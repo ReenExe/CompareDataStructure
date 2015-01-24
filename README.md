@@ -5,6 +5,7 @@ Assert Structure
 Native PHP assert for testing REST API JSON response
 
 Include a dependency in your `composer.json` file:
+
     {
         "require": {
             "reenexe/compare-data-structure": "1.0.0"
