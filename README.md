@@ -136,14 +136,16 @@ Comparator::check($data, $structure)
 ```
 in PHPUnit easy:
 ```php
-...
-public function assertArrayStructureSuccess($data, $structure)
-{
-    $diff = Comparator::check($data, $structure);
+use ReenExe\CompareDataStructure\Comparator;
 
-    $this->assertTrue($diff->isEqual(), (string) $diff);
+class Test extends PHPUnit_Framework_TestCase{
+
+    public function testSimple()
+    {
+        $diff = Comparator::check(1, 'integer');
+        $this->assertTrue($diff->isEqual(), $diff);
+    }
 }
-...
 ```
 
 Custom types (or `user types`):
