@@ -130,12 +130,10 @@ class Comparator
         if (is_array($data)) {
 
             if (isset($structure['assoc'])) {
-
-                if ($diff = $this->assoc($structure['assoc'], $data)) {
-                    return $diff;
-                }
-
-            } elseif(isset($structure['values'])) {
+				return $this->assoc($structure['assoc'], $data);
+            }
+			
+			if(isset($structure['values'])) {
 
                 if (is_array($structure['values'])) {
                     foreach ($data as $key => $subData) {
