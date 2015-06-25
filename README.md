@@ -200,6 +200,7 @@ In `user types` - possibility of recursive checks
 ------------
 
 Together with the structures of `assoc`,` values`, `set` - there is a desire to add structure `range`
+Adding `strict`
 
 Alternatives:
 ------------
