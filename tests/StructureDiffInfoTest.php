@@ -5,6 +5,9 @@ require_once __DIR__ . '/../src/StructureDiffInfo.php';
 
 class StructureDiffInfoTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers \ReenExe\CompareDataStructure\StructureDiffInfo::createDiff
+     */
     public function testDiffInfo()
     {
         $message = StructureDiffInfo::KEY;
@@ -27,6 +30,9 @@ class StructureDiffInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals((string) $diff, "$message $path");
     }
 
+    /**
+     * @covers \ReenExe\CompareDataStructure\StructureDiffInfo::createEqual
+     */
     public function testEqualInfo()
     {
         $equal = StructureDiffInfo::createEqual();
