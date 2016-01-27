@@ -1,6 +1,7 @@
 Assert Structure
 ====================
 [![Build Status](https://travis-ci.org/ReenExe/CompareDataStructure.svg)](https://travis-ci.org/ReenExe/CompareDataStructure)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ReenExe/CompareDataStructure/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ReenExe/CompareDataStructure/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/reenexe/compare-data-structure/v/stable)](https://packagist.org/packages/reenexe/compare-data-structure) [![Total Downloads](https://poser.pugx.org/reenexe/compare-data-structure/downloads)](https://packagist.org/packages/reenexe/compare-data-structure)
 [![License](https://poser.pugx.org/reenexe/compare-data-structure/license)](https://packagist.org/packages/reenexe/compare-data-structure)
 
