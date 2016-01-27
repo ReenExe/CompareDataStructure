@@ -9,4 +9,4 @@ before_script:
   - composer install
 
 script:
-  - php vendor/bin/phpunit
+  - sh run_tests.sh
