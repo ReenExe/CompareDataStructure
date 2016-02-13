@@ -31,11 +31,9 @@ class Comparator
     }
 
     /**
-     * TODO: Возможно стоит всегда возвращать в одном формате. Экземпляр класса с методом `isEqual`
-     */
-    /**
      * @param $data
      * @param $structure
+     * @param array $custom
      * @return StructureDiffInfo
      */
     public static function check($data, $structure, array $custom = [])
@@ -67,20 +65,16 @@ class Comparator
          * К примеру формата даты или длины
          */
 
-        if (in_array($this->getType($value), $types)) return /* success */;
+        if (in_array($this->getType($value), $types)) return; /* success */
 
         if ($this->exists) {
-
             if ($intersect = array_intersect($types, $this->exists)) {
                 foreach ($intersect as $key) {
                     $diff = $this->compare($value, $this->temporaryCustom[$key]);
 
-                    if (empty($diff)) return /* success */;
+                    if (empty($diff)) return; /* success */
                 }
 
-                /**
-                 * TODO: Возможно стоит возвращать с наименьшим путем
-                 */
                 return $this->processDiff($diff, "custom:type:$key");
             }
         }
@@ -92,20 +86,17 @@ class Comparator
     {
         $needTypes = explode('|', $structure);
 
-        if ($diff = $this->checkTypes($data, $needTypes)) {
-            return $diff;
-        }
+        return $this->checkTypes($data, $needTypes);
     }
 
     private function diffSet($data, $set)
     {
-        $data = (array) $data;
-        $set = (array) $set;
+        $data = (array)$data;
+        $set = (array)$set;
 
         if (array_diff($data, $set)) {
             return $this->createDiff('set:out', StructureDiffInfo::TYPE);
         }
-
 
         foreach ($data as $value) {
             if (in_array($value, $set, true)) continue;
@@ -128,36 +119,37 @@ class Comparator
         }
 
         if (is_array($data)) {
+            return $this->diffArrayData($data, $structure);
+        }
+    }
 
-            if (isset($structure['assoc'])) {
-				return $this->assoc($structure['assoc'], $data);
-            }
-			
-			if(isset($structure['values'])) {
+    private function diffArrayData(array $data, array $structure)
+    {
+        if (isset($structure['assoc'])) {
+            return $this->assoc($structure['assoc'], $data);
+        }
 
-                if (is_array($structure['values'])) {
-                    foreach ($data as $key => $subData) {
+        if (isset($structure['values'])) {
+            if (is_array($structure['values'])) {
+                foreach ($data as $key => $subData) {
 
-                        if ($diff = $this->assoc($structure['values'], $subData)) {
-                            return $this->processDiff($diff, "[$key]");
-                        }
-
+                    if ($diff = $this->assoc($structure['values'], $subData)) {
+                        return $this->processDiff($diff, "[$key]");
                     }
-                } elseif (is_string($structure['values'])) {
-                    $needTypes = explode('|', $structure['values']);
 
-                    foreach ($data as $key => $subData) {
+                }
+            } elseif (is_string($structure['values'])) {
+                $needTypes = explode('|', $structure['values']);
 
-                        if ($diff = $this->checkTypes($subData, $needTypes)) {
-                            return $this->processDiff($diff, "[$key]");
-                        }
+                foreach ($data as $key => $subData) {
+
+                    if ($diff = $this->checkTypes($subData, $needTypes)) {
+                        return $this->processDiff($diff, "[$key]");
                     }
                 }
-
-            } else {
-
-                return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
             }
+        } else {
+            return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
         }
     }
 
@@ -208,7 +200,6 @@ class Comparator
 
     /**
      * @return Comparator
-
      */
     private static function instance()
     {
