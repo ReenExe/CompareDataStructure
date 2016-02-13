@@ -130,23 +130,23 @@ class Comparator
         }
 
         if (isset($structure['values'])) {
-            return $this->diffValuesStructure($data, $structure);
+            return $this->diffValuesStructure($data, $structure['values']);
         }
 
         return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
     }
 
-    private function diffValuesStructure(array $data, array $structure)
+    private function diffValuesStructure(array $data, $structure)
     {
-        if (is_array($structure['values'])) {
+        if (is_array($structure)) {
             foreach ($data as $key => $subData) {
-                if ($diff = $this->assoc($structure['values'], $subData)) {
+                if ($diff = $this->assoc($structure, $subData)) {
                     return $this->processDiff($diff, "[$key]");
                 }
 
             }
-        } elseif (is_string($structure['values'])) {
-            $needTypes = explode('|', $structure['values']);
+        } elseif (is_string($structure)) {
+            $needTypes = explode('|', $structure);
 
             foreach ($data as $key => $subData) {
                 if ($diff = $this->checkTypes($subData, $needTypes)) {
