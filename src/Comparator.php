@@ -99,17 +99,14 @@ class Comparator
         }
 
         foreach ($data as $value) {
-            if (in_array($value, $set, true)) continue;
-
-            return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+            if (!in_array($value, $set, true)) {
+                return $this->createDiff('var:type', StructureDiffInfo::TYPE);
+            }
         }
     }
 
     private function diffStructure($data, array $structure)
     {
-        /**
-         * structure `set`
-         */
         if (isset($structure['set'])) {
             return $this->diffSet($data, $structure['set']);
         }
@@ -161,7 +158,7 @@ class Comparator
         foreach ($assoc as $key => $structure) {
             if (!array_key_exists($key, $data)) {
                 return $this->createDiff($key, StructureDiffInfo::KEY);
-            };
+            }
 
             if ($diff = $this->compare($data[$key], $structure)) {
                 return $this->processDiff($diff, $key);
