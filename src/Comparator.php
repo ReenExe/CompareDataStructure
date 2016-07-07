@@ -58,21 +58,30 @@ class Comparator
         return $this->createDiff('undefined:structure', StructureDiffInfo::CONFIG);
     }
 
-    private function checkTypes($value, array $types)
+    /**
+     * @param $value
+     * @param array $types
+     * @return StructureDiffInfo|null
+     */
+    private function diffTypes($value, array $types)
     {
         /**
          * Возможно тут будет переопределение проверки
          * К примеру формата даты или длины
          */
 
-        if (in_array($this->getType($value), $types)) return; /* success */
+        if (in_array($this->getType($value), $types)) {
+            return null;
+        }
 
         if ($this->exists) {
             if ($intersect = array_intersect($types, $this->exists)) {
                 foreach ($intersect as $key) {
                     $diff = $this->compare($value, $this->temporaryCustom[$key]);
 
-                    if (empty($diff)) return; /* success */
+                    if (empty($diff)) {
+                        return null;
+                    }
                 }
 
                 return $this->processDiff($diff, "custom:type:$key");
@@ -86,9 +95,14 @@ class Comparator
     {
         $needTypes = explode('|', $structure);
 
-        return $this->checkTypes($data, $needTypes);
+        return $this->diffTypes($data, $needTypes);
     }
 
+    /**
+     * @param $data
+     * @param $set
+     * @return StructureDiffInfo|null
+     */
     private function diffSet($data, $set)
     {
         $data = (array)$data;
@@ -103,23 +117,37 @@ class Comparator
                 return $this->createDiff('var:type', StructureDiffInfo::TYPE);
             }
         }
+
+        return null;
     }
 
+    /**
+     * @param $data
+     * @param array $structure
+     * @return StructureDiffInfo|null
+     */
     private function diffStructure($data, array $structure)
     {
         if (isset($structure['set'])) {
             return $this->diffSet($data, $structure['set']);
         }
 
-        if ($diff = $this->checkTypes($data, $this->getStructureType($structure))) {
+        if ($diff = $this->diffTypes($data, $this->getStructureType($structure))) {
             return $diff;
         }
 
         if (is_array($data)) {
             return $this->diffArrayData($data, $structure);
         }
+
+        return null;
     }
 
+    /**
+     * @param array $data
+     * @param array $structure
+     * @return StructureDiffInfo|null
+     */
     private function diffArrayData(array $data, array $structure)
     {
         if (isset($structure['assoc'])) {
@@ -133,6 +161,11 @@ class Comparator
         return $this->createDiff('structure:type', StructureDiffInfo::CONFIG);
     }
 
+    /**
+     * @param array $data
+     * @param $structure
+     * @return StructureDiffInfo|null
+     */
     private function diffValuesStructure(array $data, $structure)
     {
         if (is_array($structure)) {
@@ -146,11 +179,13 @@ class Comparator
             $needTypes = explode('|', $structure);
 
             foreach ($data as $key => $subData) {
-                if ($diff = $this->checkTypes($subData, $needTypes)) {
+                if ($diff = $this->diffTypes($subData, $needTypes)) {
                     return $this->processDiff($diff, "[$key]");
                 }
             }
         }
+
+        return null;
     }
 
     private function assoc(array $assoc, array $data)
@@ -164,6 +199,8 @@ class Comparator
                 return $this->processDiff($diff, $key);
             }
         }
+
+        return null;
     }
 
     private function getType($value)
